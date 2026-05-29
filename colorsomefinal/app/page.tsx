@@ -1,75 +1,42 @@
-// import Image from "next/image";
 
-// export default function Home() {
-//   return (
-//     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-//       <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-//         <Image
-//           className="dark:invert"
-//           src="/next.svg"
-//           alt="Next.js logo"
-//           width={100}
-//           height={20}
-//           priority
-//         />
-//         <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-//           <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-//             To get started, edit the page.tsx file.
-//           </h1>
-//           <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-//             Looking for a starting point or more instructions? Head over to{" "}
-//             <a
-//               href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-//               className="font-medium text-zinc-950 dark:text-zinc-50"
-//             >
-//               Templates
-//             </a>{" "}
-//             or the{" "}
-//             <a
-//               href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-//               className="font-medium text-zinc-950 dark:text-zinc-50"
-//             >
-//               Learning
-//             </a>{" "}
-//             center.
-//           </p>
-//         </div>
-//         <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-//           <a
-//             className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-//             href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-//             target="_blank"
-//             rel="noopener noreferrer"
-//           >
-//             <Image
-//               className="dark:invert"
-//               src="/vercel.svg"
-//               alt="Vercel logomark"
-//               width={16}
-//               height={16}
-//             />
-//             Deploy Now
-//           </a>
-//           <a
-//             className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-//             href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-//             target="_blank"
-//             rel="noopener noreferrer"
-//           >
-//             Documentation
-//           </a>
-//         </div>
-//       </main>
-//     </div>
-//   );
-// }
 "use client";
 
 import React from 'react';
+import { useEffect, useState } from "react";
+import gsap from "gsap";
 import Link from 'next/link';
 import RevealText from '../components/RevealText';
+import ScrollSequence from "../components/ScrollSequence";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export default function HomePage() {
+  gsap.registerPlugin(ScrollTrigger);
+  const [currentFrame, setCurrentFrame] =
+    useState(1);
+
+  useEffect(() => {
+    const obj = {
+      frame: 1,
+    };
+
+    gsap.to(obj, {
+      frame: 240,
+      snap: "frame",
+      ease: "none",
+      scrollTrigger: {
+  trigger: document.body,
+  start: "top top",
+  end: () =>
+    document.body.scrollHeight -
+    window.innerHeight -150,
+  scrub: 0.5,
+},
+      onUpdate: () => {
+        setCurrentFrame(Math.floor(obj.frame));
+      },
+    });
+  }, []);
+
   const scrollToNextSection = (): void => {
     const nextSection = document.getElementById('architecture-section');
     if (nextSection) {
@@ -79,18 +46,18 @@ export default function HomePage() {
 
   return (
     <main className="flex-1 w-full flex flex-col">
-      
+
       {/* 
         HERO SECTION 
       */}
       <section className="flex flex-col lg:flex-row w-full border-b border-gray-200 min-h-[85vh] bg-white relative z-10">
-        
+
         {/* Left Panel */}
         <div className="w-full lg:w-1/2 flex flex-col border-r border-gray-200 shrink-0 lg:shrink">
           {/* Logo Banner Area */}
           <div className="h-[30vh] lg:h-[45%] w-full border-b border-gray-200 flex flex-col justify-center relative bg-white overflow-hidden">
-            <div 
-              className="absolute inset-0 opacity-40 pointer-events-none bg-grid-static" 
+            <div
+              className="absolute inset-0 opacity-40 pointer-events-none bg-grid-static"
               style={{ clipPath: 'inset(20% 0 20% 0)' }}
             />
             <h1 className="text-5xl sm:text-7xl lg:text-8xl font-bold tracking-[0.2em] text-center text-gray-900 relative z-10 transition-transform duration-700 hover:scale-[1.02] cursor-default">
@@ -99,8 +66,8 @@ export default function HomePage() {
           </div>
 
           {/* Copy Area */}
-          <div 
-            className="flex-1 p-8 md:p-12 lg:p-16 flex flex-col justify-end relative" 
+          <div
+            className="flex-1 p-8 md:p-12 lg:p-16 flex flex-col justify-end relative"
             style={{ background: 'radial-gradient(circle at 30% 70%, #ffffff 0%, #f9fafb 100%)' }}
           >
             <div className="max-w-xl">
@@ -111,8 +78,8 @@ export default function HomePage() {
                 Lumina combines user-centric design, robust engineering and modern tech stacks to deliver production-ready solutions for forward-thinking brands and ambitious startups.
               </p>
             </div>
-            
-            <button 
+
+            <button
               onClick={scrollToNextSection}
               className="mt-12 md:mt-20 flex items-center gap-2 text-xs text-gray-500 hover:text-gray-900 transition-colors cursor-pointer group w-max outline-none"
               aria-label="Scroll to explore"
@@ -126,12 +93,17 @@ export default function HomePage() {
         {/* Right Panel */}
         <div className="w-full lg:w-1/2 flex flex-col h-[60vh] lg:h-auto">
           {/* Hero Image */}
-          <div className="flex-1 relative overflow-hidden group">
+          {/* <div className="flex-1 relative overflow-hidden group">
             <img 
               src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/8bacc4a0-99e3-4167-8620-7d28e052331b_1600w.webp" 
               alt="Abstract Blue Wave" 
               className="w-full h-full object-cover transition-transform duration-[2000ms] ease-out group-hover:scale-105" 
               loading="eager"
+            />
+          </div> */}
+          <div className="flex-1 relative overflow-hidden">
+            <ScrollSequence
+              currentFrame={currentFrame}
             />
           </div>
 
@@ -164,7 +136,7 @@ export default function HomePage() {
         ARCHITECTURE SECTION 
       */}
       <div id="architecture-section" className="w-full max-w-[1600px] mx-auto px-6 md:px-12 flex flex-col pt-24 md:pt-40 pb-24 relative z-10">
-        
+
         {/* Typography Section */}
         <section className="grid grid-cols-1 md:grid-cols-12 gap-x-6 gap-y-12 mb-24 md:mb-40">
           <div className="col-span-1 md:col-span-2 flex flex-col justify-between order-2 md:order-1">
@@ -174,7 +146,7 @@ export default function HomePage() {
                 Engineering spatial digital platforms and immersive web architectures.
               </p>
               <div className="flex items-center gap-2 text-xs text-gray-400 uppercase tracking-widest font-semibold mt-4">
-                Scroll 
+                Scroll
                 <iconify-icon icon="solar:arrow-down-linear" width="14" height="14" className="animate-bounce" />
               </div>
             </div>
@@ -188,29 +160,34 @@ export default function HomePage() {
         </section>
 
         {/* Architectural Imagery Block */}
-        <section className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-24 md:mb-40">
+        {/* <section className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-24 md:mb-40">
           <div className="hidden md:block col-span-2 border-t border-gray-200 pt-4 relative">
             <p className="text-xs uppercase tracking-widest text-gray-400 font-semibold absolute top-8 left-0 origin-top-left -rotate-90 translate-y-24">Facade</p>
           </div>
           <div className="col-span-1 md:col-span-10 relative h-[50vh] md:h-[75vh] w-full overflow-hidden bg-gray-200 group">
-            <img 
-              src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/890403d8-9a92-467c-974f-3ad4b2ebfac6_3840w.webp" 
-              alt="Minimalist glass office overlooking misty fjord" 
-              className="w-full h-full object-cover transition-transform duration-[3000ms] ease-out group-hover:scale-105" 
+            <img
+              src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/890403d8-9a92-467c-974f-3ad4b2ebfac6_3840w.webp"
+              alt="Minimalist glass office overlooking misty fjord"
+              className="w-full h-full object-cover transition-transform duration-[3000ms] ease-out group-hover:scale-105"
               loading="lazy"
             />
             <div className="absolute inset-0 bg-black/5 pointer-events-none transition-opacity duration-700 group-hover:opacity-0" />
           </div>
-        </section>
+        </section> */}
+        <div className="flex-1 relative overflow-hidden">
+          <ScrollSequence
+            currentFrame={currentFrame}
+          />
+        </div>
 
         {/* Service & Capabilities Rows */}
         <section className="grid grid-cols-1 md:grid-cols-12 gap-6 relative z-10">
           <div className="hidden md:block col-span-3 border-t border-gray-200 pt-6">
             <p className="text-xs uppercase tracking-widest text-gray-400 font-semibold">02 / Capabilities</p>
           </div>
-          
+
           <div className="col-span-1 md:col-span-9 flex flex-col">
-            
+
             {/* Row: Selected Work */}
             <Link href="/projects" className="group block border-t border-gray-200 py-10 md:py-14 hover:bg-white transition-colors duration-500 relative px-4 md:px-8 -mx-4 md:mx-0 outline-none">
               <div className="grid grid-cols-1 md:grid-cols-9 gap-6 items-center">
@@ -250,7 +227,7 @@ export default function HomePage() {
         Adapted from the architectural layout pattern for the next segment
       */}
       <div id="methodology-section" className="w-full max-w-[1600px] mx-auto px-6 md:px-12 flex flex-col pb-24 relative z-10">
-        
+
         {/* Typography Section */}
         <section className="grid grid-cols-1 md:grid-cols-12 gap-x-6 gap-y-12 mb-24 md:mb-40 pt-24 md:pt-32 border-t border-gray-200">
           <div className="col-span-1 md:col-span-2 flex flex-col justify-between order-2 md:order-1">
@@ -270,29 +247,34 @@ export default function HomePage() {
         </section>
 
         {/* Architectural Imagery Block */}
-        <section className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-24 md:mb-40">
+        {/* <section className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-24 md:mb-40">
           <div className="hidden md:block col-span-2 border-t border-gray-200 pt-4 relative">
             <p className="text-xs uppercase tracking-widest text-gray-400 font-semibold absolute top-8 left-0 origin-top-left -rotate-90 translate-y-24">Structure</p>
           </div>
           <div className="col-span-1 md:col-span-10 relative h-[50vh] md:h-[75vh] w-full overflow-hidden bg-gray-200 group">
-            <img 
-              src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/71d5ff7d-a314-4917-9656-0c7b086f591f_1600w.webp" 
-              alt="Abstract building facade looking up at the sky" 
-              className="w-full h-full object-cover transition-transform duration-[3000ms] ease-out group-hover:scale-105" 
+            <img
+              src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/71d5ff7d-a314-4917-9656-0c7b086f591f_1600w.webp"
+              alt="Abstract building facade looking up at the sky"
+              className="w-full h-full object-cover transition-transform duration-[3000ms] ease-out group-hover:scale-105"
               loading="lazy"
             />
             <div className="absolute inset-0 bg-black/5 pointer-events-none transition-opacity duration-700 group-hover:opacity-0" />
           </div>
-        </section>
+        </section> */}
+        <div className="flex-1 relative overflow-hidden">
+          <ScrollSequence
+            currentFrame={currentFrame}
+          />
+        </div>
 
         {/* Systems Rows */}
         <section className="grid grid-cols-1 md:grid-cols-12 gap-6 relative z-10">
           <div className="hidden md:block col-span-3 border-t border-gray-200 pt-6">
             <p className="text-xs uppercase tracking-widest text-gray-400 font-semibold">04 / Systems</p>
           </div>
-          
+
           <div className="col-span-1 md:col-span-9 flex flex-col">
-            
+
             {/* Row: Platform Architecture */}
             <Link href="/platform" className="group block border-t border-gray-200 py-10 md:py-14 hover:bg-white transition-colors duration-500 relative px-4 md:px-8 -mx-4 md:mx-0 outline-none">
               <div className="grid grid-cols-1 md:grid-cols-9 gap-6 items-center">
