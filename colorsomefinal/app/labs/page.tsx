@@ -2,11 +2,10 @@
 
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import RevealText from '../../components/RevealText';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
 
 interface Product {
   id: string;
@@ -22,17 +21,12 @@ interface Product {
 }
 
 export default function Labs() {
-  const searchParams = useSearchParams();
-  const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
-
   useEffect(() => {
     window.scrollTo(0, 0);
     
     // Check if there's a product hash in the URL
     const hash = window.location.hash;
     if (hash && hash.includes('product-')) {
-      const productId = hash.replace('#product-', '');
-      setSelectedProduct(productId);
       // Scroll to product after a small delay
       setTimeout(() => {
         const element = document.getElementById(hash.substring(1));
