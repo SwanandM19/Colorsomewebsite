@@ -1,56 +1,356 @@
+
+
 "use client";
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import RevealText from '../../components/RevealText';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 
-interface Experiment {
+interface Product {
   id: string;
-  title: string;
+  name: string;
   description: string;
+  fullDescription: string;
   status: string;
   image: string;
-  tech: string[];
+  category: string;
+  features: string[];
+  applications: string[];
+  slug: string;
 }
 
 export default function Labs() {
+  const searchParams = useSearchParams();
+  const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
+
   useEffect(() => {
     window.scrollTo(0, 0);
+    
+    // Check if there's a product hash in the URL
+    const hash = window.location.hash;
+    if (hash && hash.includes('product-')) {
+      const productId = hash.replace('#product-', '');
+      setSelectedProduct(productId);
+      // Scroll to product after a small delay
+      setTimeout(() => {
+        const element = document.getElementById(hash.substring(1));
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    }
   }, []);
 
-  const experiments: Experiment[] = [
+  const products: Product[] = [
+    // Coatings & Paints
     {
       id: "01",
-      title: "Neural Interface Patterns",
-      description: "Exploring predictive UI components that adapt to user behavior through client-side ML models.",
-      status: "Active Prototype",
-      image: "https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/beb639b1-8f5c-47cc-9b57-744e55e55b95_1600w.webp",
-      tech: ["React", "TensorFlow.js"]
+      name: "Axis Weather Coat",
+      description: "Precision-engineered protective coating for extreme environmental conditions.",
+      fullDescription: "Axis Weather Coat is a premium protective coating engineered to withstand extreme weather conditions, UV radiation, and chemical exposure. Ideal for industrial and marine applications.",
+      status: "Active",
+      image: "/Axis_Weather_Coat.png",
+      category: "Protective Coatings",
+      features: ["UV Resistant", "Chemical Resistant", "Weather Proof", "Long-lasting Durability"],
+      applications: ["Industrial Equipment", "Marine Vessels", "Outdoor Structures", "Pipeline Protection"],
+      slug: "axis-weather-coat"
     },
     {
       id: "02",
-      title: "Spatial Typography",
-      description: "Three-dimensional text rendering architectures utilizing custom WebGL shaders for immersive reading.",
-      status: "Archived",
-      image: "https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/9ba1c110-6848-402a-9880-c2d6e2bb71b6_1600w.webp",
-      tech: ["Three.js", "GLSL"]
+      name: "Ara Weather Coat",
+      description: "Advanced reactive armor system designed for durability and performance.",
+      fullDescription: "Ara Weather Coat features advanced reactive technology that adapts to environmental conditions, providing superior protection against corrosion and wear.",
+      status: "Active",
+      image: "/Ara_Weather_Coat.png",
+      category: "Protective Coatings",
+      features: ["Self-healing Properties", "Anti-corrosion", "Temperature Resistant", "Flexible Application"],
+      applications: ["Automotive", "Aerospace", "Heavy Machinery", "Infrastructure"],
+      slug: "ara-weather-coat"
     },
     {
       id: "03",
-      title: "Algorithmic Motion",
-      description: "Physics-based animation libraries designed for highly complex, fluid micro-interactions.",
-      status: "In Development",
-      image: "https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/7ef0d443-2992-4554-852d-3c740be46c15_1600w.webp",
-      tech: ["WebGL", "Canvas API"]
+      name: "Tough Tex",
+      description: "Industrial-grade textile technology for maximum resilience and flexibility.",
+      fullDescription: "Tough Tex is an industrial-grade textile coating that combines maximum resilience with flexibility, perfect for high-wear applications.",
+      status: "Active",
+      image: "/Tough_Tex.png",
+      category: "Industrial Textiles",
+      features: ["Tear Resistant", "Waterproof", "Breathable", "High Tensile Strength"],
+      applications: ["Protective Gear", "Industrial Covers", "Tarpaulins", "Tents"],
+      slug: "tough-tex"
     },
     {
       id: "04",
-      title: "Generative Environments",
-      description: "Procedurally generated 3D landscapes built dynamically from real-time data inputs.",
-      status: "Concept",
-      image: "https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/c12ef2d1-a1ea-498b-89b3-e39e9d4f91a5_1600w.webp",
-      tech: ["React Three Fiber", "WebGPU"]
+      name: "CRUX SUPRA Fine Finish Wall Putty",
+      description: "Premium fine finish wall putty for smooth, flawless surfaces.",
+      fullDescription: "CRUX SUPRA Fine Finish Wall Putty provides an ultra-smooth base for premium paints, ensuring perfect wall finishing with superior adhesion.",
+      status: "Active",
+      image: "/CRUX_SUPRA_Fine_Finish_Wall_Putty.png",
+      category: "Wall Finishes",
+      features: ["Smooth Finish", "Excellent Adhesion", "Crack Resistant", "Easy Application"],
+      applications: ["Interior Walls", "Exterior Walls", "Commercial Spaces", "Residential Projects"],
+      slug: "crux-supra-fine-finish"
+    },
+    {
+      id: "05",
+      name: "CRUX Coarse Finish Wall Putty",
+      description: "Rugged wall putty for textured finishes and surface leveling.",
+      fullDescription: "CRUX Coarse Finish Wall Putty is designed for surface leveling and creating textured finishes on both interior and exterior walls.",
+      status: "Active",
+      image: "/CRUX_Coarse_Finish_Wall_Putty.png",
+      category: "Wall Finishes",
+      features: ["Excellent Coverage", "Surface Leveling", "Textured Finish", "Durable"],
+      applications: ["Exterior Walls", "Textured Finishes", "Repair Work", "Surface Preparation"],
+      slug: "crux-coarse-finish"
+    },
+    {
+      id: "06",
+      name: "Buildwell Ready-Mix Plaster",
+      description: "Pre-mixed plaster solution for efficient construction.",
+      fullDescription: "Buildwell Ready-Mix Plaster is a factory-mixed plaster that ensures consistent quality and reduces on-site labor requirements.",
+      status: "Active",
+      image: "/Buildwell_Reay-Mix_Plaster.png",
+      category: "Construction Materials",
+      features: ["Consistent Quality", "Time Saving", "Reduced Waste", "Superior Bonding"],
+      applications: ["Interior Walls", "Exterior Walls", "Ceilings", "Renovation Projects"],
+      slug: "buildwell-ready-mix-plaster"
+    },
+    {
+      id: "07",
+      name: "Glossmate Enamel Paint",
+      description: "High-gloss enamel paint for brilliant, long-lasting finish.",
+      fullDescription: "Glossmate Enamel Paint delivers a brilliant, high-gloss finish that resists yellowing and maintains its shine for years.",
+      status: "Active",
+      image: "/Glossmate_Enamel_Paint.png",
+      category: "Decorative Paints",
+      features: ["High Gloss Finish", "Scratch Resistant", "Easy Cleaning", "Weather Resistant"],
+      applications: ["Metal Surfaces", "Wood Work", "Furniture", "Doors & Windows"],
+      slug: "glossmate-enamel"
+    },
+    {
+      id: "08",
+      name: "Uniprime Ext",
+      description: "Premium exterior primer for superior paint adhesion.",
+      fullDescription: "Uniprime Ext is a high-performance exterior primer that ensures superior paint adhesion and protects against weathering.",
+      status: "Active",
+      image: "/Uniprime_Ext.png",
+      category: "Primers",
+      features: ["Superior Adhesion", "Alkali Resistant", "Weather Protection", "Seals Surfaces"],
+      applications: ["Exterior Walls", "Concrete Surfaces", "Plastered Walls", "Masonry"],
+      slug: "uniprime-ext"
+    },
+    {
+      id: "09",
+      name: "Uniprime",
+      description: "Versatile primer for interior and exterior applications.",
+      fullDescription: "Uniprime is a versatile all-purpose primer that prepares surfaces for optimal paint adhesion and uniform finish.",
+      status: "Active",
+      image: "/Uniprime.png",
+      category: "Primers",
+      features: ["All-purpose", "Quick Drying", "Excellent Adhesion", "Seals Porous Surfaces"],
+      applications: ["Interior Walls", "Exterior Walls", "Wood", "Metal"],
+      slug: "uniprime"
+    },
+    {
+      id: "10",
+      name: "Jet Emulsion",
+      description: "Smooth emulsion paint for elegant interior finishes.",
+      fullDescription: "Jet Emulsion provides a smooth, elegant finish for interior walls with excellent washability and color retention.",
+      status: "Active",
+      image: "/Jet_Emulsion.png",
+      category: "Emulsion Paints",
+      features: ["Smooth Finish", "Washable", "Color Retention", "Low VOC"],
+      applications: ["Living Rooms", "Bedrooms", "Offices", "Hotels"],
+      slug: "jet-emulsion"
+    },
+    {
+      id: "11",
+      name: "Metalock Yellow Pro",
+      description: "Professional grade yellow metal coating for industrial use.",
+      fullDescription: "Metalock Yellow Pro is a professional-grade coating specifically formulated for metal surfaces requiring high visibility and protection.",
+      status: "Active",
+      image: "/Metalock_Yellow_Pro.png",
+      category: "Industrial Coatings",
+      features: ["High Visibility", "Corrosion Resistant", "UV Stable", "Industrial Grade"],
+      applications: ["Safety Equipment", "Industrial Machinery", "Markings", "Heavy Equipment"],
+      slug: "metalock-yellow-pro"
+    },
+    {
+      id: "12",
+      name: "Metalock Yellow",
+      description: "Standard yellow metal coating for general applications.",
+      fullDescription: "Metalock Yellow provides reliable protection and high-visibility finish for general metal coating applications.",
+      status: "Active",
+      image: "/Metalock_Yellow.png",
+      category: "Industrial Coatings",
+      features: ["Durable Finish", "Good Coverage", "Weather Resistant", "Easy Application"],
+      applications: ["Metal Structures", "Pipes", "Equipment", "General Metal Work"],
+      slug: "metalock-yellow"
+    },
+    {
+      id: "13",
+      name: "Metalock Red Pro",
+      description: "Premium red industrial coating for heavy-duty applications.",
+      fullDescription: "Metalock Red Pro delivers superior protection and high-visibility red finish for heavy-duty industrial applications.",
+      status: "Active",
+      image: "/Metalock_Red_Pro.png",
+      category: "Industrial Coatings",
+      features: ["Heavy-duty Protection", "Chemical Resistant", "High Visibility", "Long-lasting"],
+      applications: ["Fire Safety Equipment", "Heavy Machinery", "Industrial Piping", "Warning Markings"],
+      slug: "metalock-red-pro"
+    },
+    {
+      id: "14",
+      name: "Metalock Red",
+      description: "Standard red metal coating for general industrial use.",
+      fullDescription: "Metalock Red offers reliable protection and standard red finish for general industrial metal coating requirements.",
+      status: "Active",
+      image: "/Metalock_Red.png",
+      category: "Industrial Coatings",
+      features: ["Good Adhesion", "Weather Resistant", "Economical", "Easy to Apply"],
+      applications: ["General Metal Surfaces", "Maintenance Work", "Repairs", "Touch-ups"],
+      slug: "metalock-red"
+    },
+    {
+      id: "15",
+      name: "Oil Paint Premium",
+      description: "Premium oil-based paint for superior finish and durability.",
+      fullDescription: "Oil Paint Premium delivers a superior, durable finish with excellent flow and leveling properties for professional results.",
+      status: "Active",
+      image: "/Oil_Paint_premium.png",
+      category: "Oil Paints",
+      features: ["Superior Flow", "Excellent Durability", "High Gloss Option", "Smooth Finish"],
+      applications: ["Fine Woodwork", "Furniture", "Decorative Surfaces", "Artistic Projects"],
+      slug: "oil-paint-premium"
+    },
+    {
+      id: "16",
+      name: "Eco Acrylic Distemper",
+      description: "Eco-friendly acrylic distemper for interior walls.",
+      fullDescription: "Eco Acrylic Distemper is an environmentally friendly, water-based distemper perfect for interior walls with excellent coverage.",
+      status: "Active",
+      image: "/Eco_Acrylic_Distemper.png",
+      category: "Distempers",
+      features: ["Eco-friendly", "Water-based", "Excellent Coverage", "Breathable Finish"],
+      applications: ["Interior Walls", "Ceilings", "Low-traffic Areas", "Residential Spaces"],
+      slug: "eco-acrylic-distemper"
+    },
+    {
+      id: "17",
+      name: "Decorx Acrylic Distemper",
+      description: "Decorative acrylic distemper for enhanced interior aesthetics.",
+      fullDescription: "Decorx Acrylic Distemper combines decorative appeal with durable protection for enhanced interior wall aesthetics.",
+      status: "Active",
+      image: "/Decorx_Acrylic_Distemper.png",
+      category: "Distempers",
+      features: ["Decorative Finish", "Durable", "Easy Application", "Good Coverage"],
+      applications: ["Interior Decoration", "Feature Walls", "Commercial Spaces", "Hospitality"],
+      slug: "decorx-acrylic-distemper"
+    },
+    {
+      id: "18",
+      name: "Aquaris Supra",
+      description: "Premium waterproofing solution for superior protection.",
+      fullDescription: "Aquaris Supra provides premium waterproofing protection for roofs, terraces, and other exposed surfaces.",
+      status: "Active",
+      image: "/Aquaris_Supra.png",
+      category: "Waterproofing",
+      features: ["Superior Waterproofing", "Elastic Properties", "UV Resistant", "Long-lasting"],
+      applications: ["Roofs", "Terraces", "Balconies", "Water Tanks"],
+      slug: "aquaris-supra"
+    },
+    {
+      id: "19",
+      name: "Aquaproof",
+      description: "Reliable waterproofing compound for construction.",
+      fullDescription: "Aquaproof is a reliable waterproofing compound that provides effective protection against water ingress in construction projects.",
+      status: "Active",
+      image: "/Aquaproof.png",
+      category: "Waterproofing",
+      features: ["Effective Protection", "Easy Application", "Cost-effective", "Versatile Use"],
+      applications: ["Basements", "Bathrooms", "Wet Areas", "Foundation Walls"],
+      slug: "aquaproof"
+    },
+    {
+      id: "20",
+      name: "Decorprime",
+      description: "High-performance decorative primer for premium finishes.",
+      fullDescription: "Decorprime is a high-performance primer that ensures premium decorative finishes with enhanced durability and adhesion.",
+      status: "Active",
+      image: "/Decorprime.png",
+      category: "Primers",
+      features: ["Premium Finish", "Enhanced Adhesion", "Seals Surfaces", "Quick Drying"],
+      applications: ["Premium Interiors", "Decorative Projects", "High-end Finishes", "Architectural Work"],
+      slug: "decorprime"
+    },
+    {
+      id: "21",
+      name: "DuraGuard Exterior",
+      description: "Heavy-duty exterior paint for maximum protection.",
+      fullDescription: "DuraGuard Exterior provides maximum protection against harsh weather conditions with exceptional durability and color retention.",
+      status: "Active",
+      image: "/DuraGuard_Exterior.png",
+      category: "Exterior Paints",
+      features: ["Maximum Protection", "Weather Resistant", "Color Retention", "Anti-fungal"],
+      applications: ["Exterior Walls", "Facades", "Boundary Walls", "Commercial Buildings"],
+      slug: "duraguard-exterior"
+    },
+    {
+      id: "22",
+      name: "DuraGuard Interior",
+      description: "Durable interior paint for high-traffic areas.",
+      fullDescription: "DuraGuard Interior offers exceptional durability for high-traffic interior areas while maintaining an elegant finish.",
+      status: "Active",
+      image: "/DuraGuard_Interior.png",
+      category: "Interior Paints",
+      features: ["Scrub Resistant", "Stain Resistant", "Easy Cleaning", "Durable Finish"],
+      applications: ["Hallways", "Corridors", "Kitchens", "High-traffic Areas"],
+      slug: "duraguard-interior"
+    },
+    {
+      id: "23",
+      name: "Eva Emulsion",
+      description: "Smooth emulsion with excellent coverage properties.",
+      fullDescription: "Eva Emulsion delivers smooth, even coverage with excellent hiding power and a elegant matte finish.",
+      status: "Active",
+      image: "/Eva_Emulsion.png",
+      category: "Emulsion Paints",
+      features: ["Excellent Coverage", "Smooth Finish", "Matte Appearance", "Good Hiding Power"],
+      applications: ["Interior Walls", "Ceilings", "Bedrooms", "Living Areas"],
+      slug: "eva-emulsion"
+    },
+    {
+      id: "24",
+      name: "Zodiac Emulsion",
+      description: "Premium emulsion for luxurious interior finishes.",
+      fullDescription: "Zodiac Emulsion provides a luxurious, premium finish for discerning interior design projects requiring exceptional quality.",
+      status: "Active",
+      image: "/Zodiac_Emulsion.png",
+      category: "Emulsion Paints",
+      features: ["Luxurious Finish", "Premium Quality", "Excellent Durability", "Rich Colors"],
+      applications: ["Luxury Homes", "Premium Offices", "Hotels", "Showrooms"],
+      slug: "zodiac-emulsion"
     }
   ];
+
+  // Filter products by category for better organization
+  const categories = {
+    "Protective Coatings": products.filter(p => p.category === "Protective Coatings"),
+    "Wall Finishes": products.filter(p => p.category === "Wall Finishes"),
+    "Construction Materials": products.filter(p => p.category === "Construction Materials"),
+    "Decorative Paints": products.filter(p => p.category === "Decorative Paints"),
+    "Primers": products.filter(p => p.category === "Primers"),
+    "Emulsion Paints": products.filter(p => p.category === "Emulsion Paints"),
+    "Industrial Coatings": products.filter(p => p.category === "Industrial Coatings"),
+    "Oil Paints": products.filter(p => p.category === "Oil Paints"),
+    "Distempers": products.filter(p => p.category === "Distempers"),
+    "Waterproofing": products.filter(p => p.category === "Waterproofing"),
+    "Exterior Paints": products.filter(p => p.category === "Exterior Paints"),
+    "Interior Paints": products.filter(p => p.category === "Interior Paints"),
+    "Industrial Textiles": products.filter(p => p.category === "Industrial Textiles"),
+  };
 
   return (
     <main className="flex-1 w-full flex flex-col relative z-10">
@@ -61,114 +361,94 @@ export default function Labs() {
       <section className="w-full max-w-[1600px] mx-auto px-6 md:px-12 pt-32 md:pt-48 pb-24 md:pb-32 border-b border-gray-200">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-x-6 gap-y-12">
           <div className="col-span-1 md:col-span-3 flex flex-col justify-between order-2 md:order-1">
-            <p className="text-xs uppercase tracking-widest text-gray-400 font-semibold mb-6 md:mb-0">Experimental Labs</p>
+            <p className="text-xs uppercase tracking-widest text-gray-400 font-semibold mb-6 md:mb-0">Product Labs</p>
             <p className="text-xs text-gray-500 max-w-[200px] leading-relaxed uppercase tracking-widest font-medium">
-              Internal prototypes and cutting-edge interaction models in development.
+              Complete range of premium coatings, paints, and construction solutions.
             </p>
           </div>
 
           <div className="col-span-1 md:col-span-9 order-1 md:order-2">
             <h1 className="text-5xl sm:text-7xl lg:text-[7rem] xl:text-[8rem] font-medium tracking-tighter leading-[0.85] text-gray-900 mb-8">
-              <RevealText text="Applied Research & Innovation" />
+              <RevealText text="Premium Surface Solutions" />
             </h1>
-          </div>
-        </div>
-      </section>
-
-      {/* 
-        EXPERIMENTS GRID
-      */}
-      <section className="w-full max-w-[1600px] mx-auto px-6 md:px-12 py-24 md:py-32">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16">
-          {experiments.map((exp: Experiment) => (
-            <div key={exp.id} className="flex flex-col group cursor-pointer">
-              
-              {/* Image Container */}
-              <div className="w-full aspect-[4/3] relative overflow-hidden mb-8 border border-gray-200 bg-gray-100">
-                <div className="absolute inset-0 bg-black/20 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-                <img 
-                  src={exp.image} 
-                  alt={exp.title} 
-                  className="w-full h-full object-cover transition-transform duration-[2000ms] ease-out group-hover:scale-105"
-                  loading="lazy"
-                />
-                <div className="absolute top-6 left-6 z-20 flex gap-2">
-                  <span className="px-3 py-1 bg-white/90 backdrop-blur-md text-[10px] uppercase tracking-widest font-bold text-gray-900">
-                    {exp.status}
-                  </span>
-                </div>
-                <div className="absolute top-6 right-6 z-20 w-10 h-10 bg-white text-gray-900 rounded-full flex items-center justify-center opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500 shadow-xl">
-                  <iconify-icon icon="solar:arrow-right-up-linear" width="20" height="20"></iconify-icon>
-                </div>
-              </div>
-
-              {/* Content Container */}
-              <div className="flex flex-col relative">
-                <div className="flex items-end justify-between border-b border-gray-200 pb-6 mb-6">
-                  <div>
-                    <span className="text-[10px] uppercase tracking-[0.2em] text-gray-400 font-bold block mb-3">
-                      EXP — {exp.id}
-                    </span>
-                    <h3 className="text-3xl md:text-4xl font-medium tracking-tight text-gray-900 group-hover:text-gray-600 transition-colors duration-300">
-                      {exp.title}
-                    </h3>
-                  </div>
-                </div>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-12 gap-6">
-                  <div className="col-span-1 sm:col-span-8">
-                    <p className="text-sm text-gray-500 leading-relaxed font-medium">
-                      {exp.description}
-                    </p>
-                  </div>
-                  <div className="col-span-1 sm:col-span-4 flex flex-col gap-2">
-                    <span className="text-[10px] uppercase tracking-[0.2em] text-gray-400 font-bold">
-                      Core Tech
-                    </span>
-                    <ul className="flex flex-col gap-1">
-                      {exp.tech.map((t: string, i: number) => (
-                        <li key={i} className="text-xs text-gray-700 font-medium">{t}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 
-        CALL TO ACTION / LABS FOOTER
-      */}
-      <section className="w-full max-w-[1600px] mx-auto px-6 md:px-12 pb-32">
-        <div className="w-full bg-[#f4f4f5] border border-gray-200 p-12 md:p-24 flex flex-col items-center justify-center text-center relative overflow-hidden group">
-          
-          <div className="absolute inset-0 opacity-40 pointer-events-none bg-grid-static" />
-          
-          <div className="relative z-10 max-w-2xl flex flex-col items-center">
-            <div className="w-12 h-12 bg-white border border-gray-200 flex items-center justify-center text-gray-900 mb-8 transition-transform duration-700 group-hover:rotate-180">
-              <iconify-icon icon="solar:lightbulb-minimalistic-linear" width="24" height="24"></iconify-icon>
-            </div>
-            <h2 className="text-3xl md:text-5xl font-medium tracking-tight text-gray-900 mb-6">
-              Pushing the boundaries of web experiences.
-            </h2>
-            <p className="text-sm md:text-base text-gray-500 leading-relaxed font-medium mb-10">
-              Our lab serves as an incubator for unconventional ideas. Many of these concepts eventually evolve into robust tools and patterns utilized in our client projects.
+            <p className="text-lg text-gray-500 max-w-2xl leading-relaxed font-medium">
+              Engineered for excellence. Our comprehensive range of products delivers superior protection, 
+              beautiful finishes, and lasting durability for every application.
             </p>
-            <a 
-              href="https://github.com" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 px-6 py-3 bg-gray-900 text-white text-xs font-semibold tracking-widest uppercase hover:bg-gray-800 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2"
-            >
-              <iconify-icon icon="simple-icons:github" width="16"></iconify-icon>
-              View Open Source Repos
-            </a>
           </div>
         </div>
       </section>
+
+      {/* 
+        PRODUCTS BY CATEGORY
+      */}
+      {Object.entries(categories).map(([category, categoryProducts]) => (
+        categoryProducts.length > 0 && (
+          <section key={category} className="w-full max-w-[1600px] mx-auto px-6 md:px-12 py-16 md:py-24 border-t border-gray-200">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-x-6 gap-y-12 mb-12">
+              <div className="col-span-1 md:col-span-3">
+                <h2 className="text-2xl md:text-3xl font-medium tracking-tight text-gray-900">
+                  {category}
+                </h2>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+              {categoryProducts.map((product) => (
+                <div 
+                  key={product.id} 
+                  id={`product-${product.slug}`}
+                  className="flex flex-col group scroll-mt-32"
+                >
+                  {/* Image Container */}
+                  <div className="w-full aspect-[4/3] relative overflow-hidden mb-6 border border-gray-200 bg-gray-100">
+                    <div className="absolute inset-0 bg-black/20 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                    <Image 
+                      src={product.image} 
+                      alt={product.name} 
+                      fill
+                      className="object-cover transition-transform duration-[2000ms] ease-out group-hover:scale-105"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
+                    <div className="absolute top-4 left-4 z-20">
+                      <span className="px-3 py-1 bg-white/90 backdrop-blur-md text-[10px] uppercase tracking-widest font-bold text-gray-900">
+                        {product.status}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="flex flex-col">
+                    <h3 className="text-xl md:text-2xl font-medium tracking-tight text-gray-900 mb-2 group-hover:text-gray-600 transition-colors">
+                      {product.name}
+                    </h3>
+                    <p className="text-sm text-gray-500 leading-relaxed mb-4">
+                      {product.description}
+                    </p>
+                    
+                    {/* Features preview */}
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {product.features.slice(0, 2).map((feature, idx) => (
+                        <span key={idx} className="text-[10px] uppercase tracking-wider text-gray-400 bg-gray-50 px-2 py-1">
+                          {feature}
+                        </span>
+                      ))}
+                    </div>
+                    
+                    <Link 
+                      href={`/labs/${product.slug}`}
+                      className="inline-flex items-center gap-2 text-xs text-gray-900 font-semibold uppercase tracking-widest group-hover:gap-3 transition-all w-max"
+                    >
+                      View Details
+                      <iconify-icon icon="solar:arrow-right-up-linear" width="14" height="14" />
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )
+      ))}
 
     </main>
   );

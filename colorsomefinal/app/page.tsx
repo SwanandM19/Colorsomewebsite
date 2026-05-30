@@ -8,6 +8,10 @@ import Link from 'next/link';
 import RevealText from '../components/RevealText';
 import ScrollSequence from "../components/ScrollSequence";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import FAQSection from '@/components/FAQSection';
+import ContactForm from '@/components/ContanctSection';
+import ProductsSection from '@/components/ProductsSection';
+
 
 export default function HomePage() {
   gsap.registerPlugin(ScrollTrigger);
@@ -61,7 +65,7 @@ export default function HomePage() {
               style={{ clipPath: 'inset(20% 0 20% 0)' }}
             />
             <h1 className="text-5xl sm:text-7xl lg:text-8xl font-bold tracking-[0.2em] text-center text-gray-900 relative z-10 transition-transform duration-700 hover:scale-[1.02] cursor-default">
-              LUMINA
+              COLORSOME
             </h1>
           </div>
 
@@ -309,6 +313,12 @@ export default function HomePage() {
         </section>
 
       </div>
+<ProductsSection />
+
+      <FAQSection />
+      
+        <ContactForm />
+     
     </main>
   );
 }
